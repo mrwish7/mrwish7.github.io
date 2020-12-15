@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+		<style>
+			html, body {
+				height: 100%;
+			}
+			body {
+				background-color: #000000;
+				background-image: url("Philips_PM5544.svg");
+				background-position: center top;
+				background-repeat: no-repeat;
+				background-size: contain;
+			}
+			p {
+				font-family: VT323;
+				font-size: 4.5vw;
+				text-transform: uppercase;
+				line-height: 75%;
+				color: #ffffff;
+				margin: 0;
+				-webkit-transform: scaleX(1.5);
+    			transform: scaleX(1.5);
+			}
+			div.top-bar-small p {
+				font-size: 2.25vw;
+			}
+			div.bar {
+				position: absolute;
+				background: #000000;
+				text-align: center;
+				margin: auto;
+				right: 0;
+			}
+			div.top-bar {
+				width: 14%;
+				top: 9.5%;
+				left: 0;
+			}
+			div.bottom-bar {
+				width: 19.2%;
+				top: 76.7%;
+				left: 2.2%;
+			}
+			div.bottom-bar-full {
+				width: 23.8%;
+				padding: 0.3% 0;
+				top: 76.3%;
+				left: 0;
+			}
+		</style>
+	</head>
+	<body onload="read_params()">
+		<div class="bar top-bar" id="tbarlarge" style="display:none;">
+			<p id="tbar"></p>
+		</div>
+		<div class="bar top-bar top-bar-small" id="tbarsmall" style="display:none;">
+			<p id="tbar1"></p>
+			<p id="tbar2"></p>
+		</div>
+		<div class="bar bottom-bar" id="bbar-right" style="display:none;">
+			<p id="bbar"></p>
+		</div>
+		<div class="bar bottom-bar-full" id="bbar-full" style="display:none;">
+			<p id="bbarfull"></p>
+		</div>
+		<script>
+			var tbar = document.getElementById('tbar');
+			var tbar1 = document.getElementById('tbar1');
+			var tbar2 = document.getElementById('tbar2');
+			var bbar = document.getElementById('bbar');
+			var bbarfull = document.getElementById('bbarfull');
+
+			var wkdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+			var mnths = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+			var clock_el;
+			var date_el;
+
+			function read_params() {
+				var urlParams = new URLSearchParams(window.location.search);
+
+				//Top Bar
+				if (urlParams.has("tbar")) {
+					var tbar_val = urlParams.get("tbar");
+					document.getElementById('tbarlarge').style.display = "block";
+					element_setter(tbar, tbar_val);
+				} else {
+					if (urlParams.has("tbar1")) {
+						var tbar1_val = urlParams.get("tbar1");
+						document.getElementById('tbarsmall').style.display = "block";
+						element_setter(tbar1, tbar1_val);
+					}
+					if (urlParams.has("tbar2")) {
+						var tbar2_val = urlParams.get("tbar2");
+						document.getElementById('tbarsmall').style.display = "block";
+						element_setter(tbar2, tbar2_val);
+					}
+				}
+				//Bottom Bar
+				if (urlParams.has("bbar")) {
+					bbar.innerHTML = urlParams.get("bbar");
+					document.getElementById('bbar-right').style.display = "block";
+				} else if (urlParams.has("bbarfull")) {
+					bbarfull.innerHTML = urlParams.get("bbarfull");
+					document.getElementById('bbar-full').style.display = "block";
+				}
+
+			}
+
+			function element_setter(enam, eval) {
+				switch(eval) {
+					case "TIME":
+						clock_el = enam;
+						tc_clock();
+						break;
+					case "DATE":
+						date_el = enam;
+						tc_date();
+						break;
+					default:
+						enam.innerHTML = eval;
+				}
+			}
+
+			function runtimers() {
+					tc_clock();
+					tc_date();
+			}
+
+			function tc_clock() {
+				var d = new Date();
+			  var s = ('0'+d.getSeconds()).substr(-2);
+			  var m = ('0'+d.getMinutes()).substr(-2);
+			  var h = ('0'+d.getHours()).substr(-2);
+			  clock_el.innerHTML = h + ":" + m + ":" + s;
+				setTimeout(tc_clock, 1000);
+			}
+
+			function tc_date() {
+				var d = new Date();
+				var w = wkdays[d.getDay()];
+				var n = ('0'+d.getDate()).substr(-2);
+				var m = mnths[d.getMonth()];
+				date_el.innerHTML = w + " " + n + " " + m;
+				setTimeout(tc_date, 1000);
+			}
+		</script>
+	</body>
+</html>
